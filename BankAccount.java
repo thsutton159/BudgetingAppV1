@@ -1,6 +1,6 @@
 /* tj sutton
- * FinanceAutomation v1 - bankaccount
- * Last updated : 4.19.2025
+ * banking app v1 - bankaccount
+ * Last updated : 6.29.2025
  */
 
 package BankFunctions;
