@@ -1,6 +1,6 @@
 /* tj sutton
- * FinanceAutomation v1 - expense
- * Last updated : 4.19.2025
+ * Banking app v1 - expense
+ * Last updated : 6.29.2025
  */
 
 package BankFunctions;
