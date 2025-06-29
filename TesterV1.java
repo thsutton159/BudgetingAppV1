@@ -1,5 +1,5 @@
 /* tj sutton
- * FinanceAutomation v1 - testerv1
+ * Budgeting app v1 - testerv1
  * Last updated : 4.19.2025
  */
 
