@@ -12,5 +12,3 @@ The account information displayed includes: the total balance, expense, emergenc
 The BankAccount class is where most of the activity takes place. This account holds the total balance, total cost of expenses, and fields to show how much money is saved for each of the following allocations: Expenses, Emergency Fund, Spending Money. 
 When the expenses function is called in TesterV1, the Bank account initializes an array of expenses, fills out their informaiton, and then distributes the money in the bank account across the expenses. 
 At this time, the BankAccount class can only distribute funds across an account whos expenses are less than its total balance. The next upload will have more distribution capabilities.
-
-T
