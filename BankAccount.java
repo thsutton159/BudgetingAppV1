@@ -1,6 +1,6 @@
 /* tj sutton
  * banking app v1 - bankaccount
- * Last updated : 6.29.2025
+ * Last updated : 7.16.2025
  */
 
 package BankFunctions;
@@ -102,7 +102,28 @@ public class BankAccount {
 				
 				
 			} else { // if there is less money in the account than current expenses
-				for(int i=0; i<this.numExpenses; i++) {
+				
+				System.out.println("Your balance is lower than uyour total expenses. How would you like to allocate your funds?");
+				System.out.println("Please select from one of the options below. Enter your answer by typing a number:");
+				System.out.println("1. Evenly");
+				System.out.println("2. Manually");
+				tempInt = myScan.nextInt();
+				
+				if(tempInt == 1) { // even split path
+					
+					double evenSplit = this.balance / (this.numExpenses + 2); // ivides the balance by the number of expenses + the emergency fund and free spend allocations 
+					
+					for(int i=0; i<this.numExpenses; i++) { // for loop to distribute between expenses
+						this.myExpenses[i].save(evenSplit); // saves the even split
+						if(this.myExpenses[i].getAmountSaved() >= this.myExpenses[i].getGoal()) { // checks if the goal is met
+							this.myExpenses[i].changeGoalStatus(); // marks the goal as paid
+						}
+					}
+					
+					this.spendingMoney = evenSplit;
+					this.emFundAlloc = evenSplit;
+					
+				} else { // for manual distribution
 					
 				}
 			}
