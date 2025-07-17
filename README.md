@@ -1,6 +1,13 @@
 # BudgetingAppV1
 This is a formula I used to help myself keep track of my finances.
 
+7/16/25
+Updated the distribute function within the BankAccount class. If the totalExpenses double amount is higher than the account balance, there is now an option to evenly distribute the balance across all expenses. This will also add the evenSplit amount to the emergencyFund and Spending money allocations.
+
+The next update will include a manual distribution of expenses. I'll likely rework how the distribute function works so that the user can choose how their funds are distributed up front. 
+
+I'll also consider updating the even split functionality so that if a goal is met, the rest of the funds can be allocated to another goal. This probably defeats the purpose? But I want to add it in as a user preference.
+
 6/29/25
 At the moment, this app is composed of 3 files: TesterV1.java, BankAccount.Java, and Expense.java.
 
