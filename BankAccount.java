@@ -1,6 +1,6 @@
 /* tj sutton
  * banking app v1 - bankaccount
- * Last updated : 7.16.2025
+ * Last updated : 9.17.2025
  */
 
 package BankFunctions;
@@ -37,8 +37,7 @@ public class BankAccount {
 			// known issue : some of the numbers go to 3 or more decimal points, causing a slight discrepancy between the amounts.
 			// issue typically only afffects the amount of cents left in temp 3. consider moving over to big decimal in the future
 			this.balance += value;
-			
-			double temp = Math.round(value * 10.0) / 20.00;
+			/*double temp = Math.round(value * 10.0) / 20.00;
 			double temp2 = value - temp;
 			double temp3 = Math.round(temp2 * 10.0) / 30.0;
 			double temp4 = temp2 - temp3;
@@ -57,9 +56,11 @@ public class BankAccount {
 			System.out.println(this.emFundAlloc);
 			System.out.println();
 			System.out.println(f.format(this.spendingMoney));
+			*/
+			
 		}
 		
-		public void withdraw(float value) {
+		public void withdrawal(double value) {
 			this.balance -= value;
 		}
 		
@@ -74,62 +75,72 @@ public class BankAccount {
 			// has the user manually fill in the expenses
 			for(int i=0; i < this.numExpenses; i++) {
 				System.out.println("Please enter the name and cost of your expense(s):");
+				System.out.println();
 				temp = myScan.next();
 				tempInt = myScan.nextInt();
 				//temp2 = myScan.next();
 				myExpenses[i] = new Expense(temp, tempInt);
 				totalExpenses += tempInt;
 			}
+			
 			this.distribute();
 			//myScan.close();
 			
 		}
 		
 		// distributes the current balance across expenses
-		private void distribute() {
+		// public to be accessed by other classes
+		public void distribute() {
+			 
+			//int tempInt; //
 			
-			if(this.balance > this.totalExpenses) { // if there is more money in the account than current expenses
-				
-				// marks all goals as met and adds up expense amounts
-				for(int i=0; i<this.numExpenses; i++) {  
-						this.expenseAlloc += this.myExpenses[i].getGoal(); // sets the money being used for expenses
-						this.myExpenses[i].save(this.myExpenses[i].getGoal()); // saves the money for this goal
-						this.myExpenses[i].changeGoalStatus(); // marks the goal as met
-				}
-				
-				this.spendingMoney = (this.balance - this.expenseAlloc) * 0.6; // sets the spending money
-				this.emFundAlloc = this.balance - this.expenseAlloc - this.spendingMoney; // sets the emergency fund allocation
-				
-				
-			} else { // if there is less money in the account than current expenses
-				
-				System.out.println("Your balance is lower than uyour total expenses. How would you like to allocate your funds?");
-				System.out.println("Please select from one of the options below. Enter your answer by typing a number:");
-				System.out.println("1. Evenly");
-				System.out.println("2. Manually");
-				tempInt = myScan.nextInt();
-				
-				if(tempInt == 1) { // even split path
-					
-					double evenSplit = this.balance / (this.numExpenses + 2); // ivides the balance by the number of expenses + the emergency fund and free spend allocations 
-					
-					for(int i=0; i<this.numExpenses; i++) { // for loop to distribute between expenses
-						this.myExpenses[i].save(evenSplit); // saves the even split
-						if(this.myExpenses[i].getAmountSaved() >= this.myExpenses[i].getGoal()) { // checks if the goal is met
-							this.myExpenses[i].changeGoalStatus(); // marks the goal as paid
-						}
+			if(this.balance > this.totalExpenses) {
+				System.out.println("Your balance is greater than your total expenses.");
+				System.out.println();
+			} else {
+				System.out.println("Your balance is less than your total expenses.\n");
+				System.out.println();
+			}
+			
+			expensesSplitMenu();
+			
+		}
+		
+		// the generic money distribution
+		private void genericDistribution() {
+			
+			for(int i=0; i<this.numExpenses; i++) {  
+				this.expenseAlloc += this.myExpenses[i].getGoal(); // sets the money being used for expenses
+				this.myExpenses[i].save(this.myExpenses[i].getGoal()); // saves the money for this goal
+				this.myExpenses[i].changeGoalStatus(); // marks the goal as met
+			}
+	
+			this.spendingMoney = (this.balance - this.expenseAlloc) * 0.6; // sets the spending money
+			this.emFundAlloc = this.balance - this.expenseAlloc - this.spendingMoney; // sets the emergency fund allocation
+		
+		}
+		
+		private void evenDistribution() {
+			
+			double evenSplit = this.balance / (this.numExpenses + 2); // ivides the balance by the number of expenses + the emergency fund and free spend allocations 
+			
+			for(int i=0; i<this.numExpenses; i++) { // for loop to distribute between expenses
+				this.myExpenses[i].save(evenSplit); // saves the even split
+				if(this.myExpenses[i].getAmountSaved() >= this.myExpenses[i].getGoal()) { // checks if the goal is met
+					if(this.myExpenses[i].getGoalStatus() == false) { // checks if the goal has been met
+						this.myExpenses[i].changeGoalStatus(); // marks the goal as paid
 					}
-					
-					this.spendingMoney = evenSplit;
-					this.emFundAlloc = evenSplit;
-					
-				} else { // for manual distribution
-					
 				}
 			}
 			
-			//this.spendingMoney = (this.balance - this.expenseAlloc)/2; // sets the spending money
-			//this.emFundAlloc = (this.balance - this.expenseAlloc)/2; // sets the emergency fund allocation
+			this.spendingMoney = evenSplit;
+			this.emFundAlloc = evenSplit;
+			
+		}
+		
+		private void manualDistribution() {
+			
+			String temp; // holds the name of an expense
 		}
 		
 		// displays current balances
@@ -138,6 +149,7 @@ public class BankAccount {
 			System.out.println("Expense savings: " + this.expenseAlloc); 
 			System.out.println("Spending money: " + this.spendingMoney);
 			System.out.println("Emergency fund: " + this.emFundAlloc);
+			System.out.println();
 			
 		}
 		
@@ -146,6 +158,36 @@ public class BankAccount {
 				System.out.println("Name: " + this.myExpenses[i].getName());
 				System.out.println("Goal is met: " + this.myExpenses[i].getGoalStatus());
 				System.out.println("Goal: " + this.myExpenses[i].getGoal() + " Amount saved: " + this.myExpenses[i].getAmountSaved());
+				System.out.println();
+			}
+		}
+		
+		private void expensesSplitMenu() { // private method so that only bank account actions can affect bank accounts
+			System.out.println("How would you like to split your balance?");
+			System.out.println("1. Built in Split");
+			System.out.println("2. Even split");
+			System.out.println("3. Manual Split");
+			System.out.println("0. Cancel Action");
+			System.out.println("Please enter the number for your option.");
+			System.out.println();
+			
+			int tempInt = myScan.nextInt();
+			
+			switch(tempInt){
+				case 1:
+					this.genericDistribution();
+					break;
+				case 2:
+					this.evenDistribution();
+					break;
+				case 3:
+					this.manualDistribution();
+					break;
+				case 0:
+					break;
+				default:
+					System.out.println("Your input did not match an option, please try again.\n");
+					break;
 			}
 		}
 
@@ -184,3 +226,4 @@ public class BankAccount {
 	
 	
 }
+
